@@ -1,9 +1,9 @@
 //disable payment methods cod,bacsa
 
-add_filter( 'woocommerce_available_payment_gateways', 'bbloomer_unset_gateway_by_category' );
+add_filter( 'woocommerce_available_payment_gateways', 'disable_payment_by_category' );
 
 
-function disable_paytment_by_category( $available_gateways ) {
+function disable_payment_by_category( $available_gateways ) {
     if ( is_admin() ) return $available_gateways;
     if ( ! is_checkout() ) return $available_gateways;
     $unset = false;
