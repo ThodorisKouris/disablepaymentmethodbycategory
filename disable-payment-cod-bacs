@@ -1,0 +1,33 @@
+//disable payment methods cod,bacsa
+
+add_filter( 'woocommerce_available_payment_gateways', 'bbloomer_unset_gateway_by_category' );
+
+
+function disable_paytment_by_category( $available_gateways ) {
+    if ( is_admin() ) return $available_gateways;
+    if ( ! is_checkout() ) return $available_gateways;
+    $unset = false;
+    
+    //change ids category
+    $category_ids = array( 796, 1049, 793, 598, 693, 692 );
+    
+    
+    foreach ( WC()->cart->get_cart_contents() as $key => $values ) {
+        $terms = get_the_terms( $values['product_id'], 'product_cat');    
+        foreach ( $terms as $term ) {        
+            if ( in_array( $term->term_id, $category_ids ) ) {
+                $unset = true;
+                break;
+            }
+            
+            
+        }
+    }
+    //disable bank transfer
+    if ( $unset == true) unset( $available_gateways['bacs'] );
+    return $available_gateways;
+    //disable cash on delivery
+    if ( $unset == true) unset( $available_gateways['cod'] );
+    return $available_gateways;
+
+}
